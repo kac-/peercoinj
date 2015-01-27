@@ -49,17 +49,17 @@ public final class MonetaryFormat {
     /** Standard format for the BTC denomination. */
     public static final MonetaryFormat BTC = new MonetaryFormat().shift(0).minDecimals(2).repeatOptionalDecimals(2, 3);
     /** Standard format for the mBTC denomination. */
-    public static final MonetaryFormat MBTC = new MonetaryFormat().shift(3).minDecimals(2).optionalDecimals(2);
+    public static final MonetaryFormat MBTC = new MonetaryFormat().shift(3).minDecimals(2).optionalDecimals(1);
     /** Standard format for the µBTC denomination. */
-    public static final MonetaryFormat UBTC = new MonetaryFormat().shift(6).minDecimals(0).optionalDecimals(2);
+    public static final MonetaryFormat UBTC = new MonetaryFormat().shift(6).minDecimals(0).optionalDecimals(0);
     /** Standard format for fiat amounts. */
     public static final MonetaryFormat FIAT = new MonetaryFormat().shift(0).minDecimals(2).repeatOptionalDecimals(2, 1);
     /** Currency code for base 1 Bitcoin. */
-    public static final String CODE_BTC = "BTC";
+    public static final String CODE_BTC = "PPC";
     /** Currency code for base 1/1000 Bitcoin. */
-    public static final String CODE_MBTC = "mBTC";
+    public static final String CODE_MBTC = "mPPC";
     /** Currency code for base 1/1000000 Bitcoin. */
-    public static final String CODE_UBTC = "µBTC";
+    public static final String CODE_UBTC = "µPPC";
 
     private final char negativeSign;
     private final char positiveSign;

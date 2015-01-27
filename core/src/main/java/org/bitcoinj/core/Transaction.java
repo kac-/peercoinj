@@ -90,17 +90,18 @@ public class Transaction extends ChildMessage implements Serializable {
      * If fee is lower than this value (in satoshis), a default reference client will treat it as if there were no fee.
      * Currently this is 1000 satoshis.
      */
-    public static final Coin REFERENCE_DEFAULT_MIN_TX_FEE = Coin.valueOf(1000);
+    public static final Coin REFERENCE_DEFAULT_MIN_TX_FEE = Coin.valueOf(10000);
 
     /**
      * Any standard (ie pay-to-address) output smaller than this value (in satoshis) will most likely be rejected by the network.
      * This is calculated by assuming a standard output will be 34 bytes, and then using the formula used in
      * {@link TransactionOutput#getMinNonDustValue(Coin)}. Currently it's 546 satoshis.
      */
-    public static final Coin MIN_NONDUST_OUTPUT = Coin.valueOf(546);
+    public static final Coin MIN_NONDUST_OUTPUT = Coin.valueOf(10000);
 
     // These are serialized in both bitcoin and java serialization.
     private long version;
+    private long time; // ppc
     private ArrayList<TransactionInput> inputs;
     private ArrayList<TransactionOutput> outputs;
 
@@ -553,7 +554,8 @@ public class Transaction extends ChildMessage implements Serializable {
         cursor = offset;
 
         version = readUint32();
-        optimalEncodingMessageSize = 4;
+        time = readUint32(); // ppc
+        optimalEncodingMessageSize = 8;
 
         // First come the inputs.
         long numInputs = readVarInt();
@@ -1038,6 +1040,7 @@ public class Transaction extends ChildMessage implements Serializable {
     @Override
     protected void bitcoinSerializeToStream(OutputStream stream) throws IOException {
         uint32ToByteStreamLE(version, stream);
+        uint32ToByteStreamLE(time, stream); // ppc
         stream.write(new VarInt(inputs.size()).encode());
         for (TransactionInput in : inputs)
             in.bitcoinSerialize(stream);
@@ -1077,6 +1080,16 @@ public class Transaction extends ChildMessage implements Serializable {
     public long getVersion() {
         maybeParse();
         return version;
+    }
+
+    public long getTime() {
+        maybeParse();
+        return time;
+    }
+
+    public void setTime(long time) {
+        unCache();
+        this.time = time;
     }
 
     /** Returns an unmodifiable view of all inputs. */
